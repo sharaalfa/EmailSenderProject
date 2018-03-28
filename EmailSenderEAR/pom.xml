@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>EmailSenderProject</artifactId>
+        <groupId>ru.roskazna.gisgmp.monitoring.activity</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+
+    <artifactId>EmailSenderEAR</artifactId>
+    <name>GISGMP EmailSenderEAR : EAR</name>
+    <packaging>ear</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>6.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.codehaus.mojo.archetypes/ejb-javaee6 -->
+        <dependency>
+            <groupId>org.codehaus.mojo.archetypes</groupId>
+            <artifactId>ejb-javaee6</artifactId>
+            <version>1.5</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>javax.ejb</groupId>
+            <artifactId>ejb-api</artifactId>
+            <version>3.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>maven</groupId>
+            <artifactId>maven-java-plugin</artifactId>
+            <version>1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.roskazna.gisgmp.monitoring.activity</groupId>
+            <artifactId>EmailSenderEJB</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>ejb</type>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>${project.artifactId}- ${project.version}</finalName>
+        <defaultGoal>package</defaultGoal>
+        <resources>
+            <resource>
+                <directory>../src/main/resources/META-INF</directory>
+                <targetPath>META-INF</targetPath>
+                <filtering>false</filtering>
+                <includes>
+                    <include>weblogic-application.xml</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.10</version>
+                <configuration>
+                    <projectNameTemplate>[artifactId]-[version]</projectNameTemplate>
+                    <wtpmanifest>true</wtpmanifest>
+                    <wtpapplicationxml>true</wtpapplicationxml>
+                    <wtpversion>2.0</wtpversion>
+                    <manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <!-- Tell Maven we are using Java EE 6 -->
+                    <version>5</version>
+                    <!-- Use Java EE ear libraries as needed. Java EE ear libraries are
+                        in easy way to package any libraries needed in the ear, and automatically
+                        have any modules (EJB-JARs and WARs) use them -->
+                    <defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>
+                    <generateApplicationXml>true</generateApplicationXml>
+                    <modules>
+                        <ejbModule>
+                            <groupId>ru.roskazna.gisgmp.monitoring.activity</groupId>
+                            <artifactId>EmailSenderEJB</artifactId>
+                            <bundleFileName>EmailSenderEJB-1.0-SNAPSHOT.jar</bundleFileName>
+                        </ejbModule>
+                    </modules>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+
+
+</project>

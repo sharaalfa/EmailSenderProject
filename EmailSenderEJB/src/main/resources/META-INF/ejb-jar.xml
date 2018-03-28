@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"
+         version="3.0">
+    <enterprise-beans>
+        <session>
+            <ejb-name>EmailSenderBean</ejb-name>
+            <mapped-name>EmailSenderBean</mapped-name>
+            <ejb-class>ru.roskazna.gisgmp.monitoring.activity.EmailSenderBean</ejb-class>
+        </session>
+        <!---<session>
+            <ejb-name>AlertOfEventBean</ejb-name>
+            <mapped-name>AlertOfEventBean</mapped-name>
+            <ejb-class>ru.megar.dispatcher.AlertOfEventBean</ejb-class>
+        </session>-->
+    </enterprise-beans>
+</ejb-jar>
