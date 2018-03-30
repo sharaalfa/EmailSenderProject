@@ -17,9 +17,9 @@ public class MailUtility {
     private String text;
     private String subject;
     private String email;
-    private static String smtpHost = "*********";
+    private static String smtpHost = "mail.megar.ru";
     private static int smtpPort = 587;
-    private static String defaultUser = "alert@megar.ru";
+    private static String defaultUser = "**************";
     private static String defaultPassword  = "*******";
     static {
         if( System.getenv("SMTP_HOST") != null )
