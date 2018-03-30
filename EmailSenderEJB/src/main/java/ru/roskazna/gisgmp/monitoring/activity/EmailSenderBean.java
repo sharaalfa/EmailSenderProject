@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.io.UnsupportedEncodingException;
 
 @Stateless(mappedName = "EmailSenderBean")
 public class EmailSenderBean implements EmailSenderInterface {
@@ -16,7 +17,7 @@ public class EmailSenderBean implements EmailSenderInterface {
     private static final long serialVersionUID = 3966807367110330202L;
     private static final String jndiName = "EmailSenderBean";
     private String urn;
-    @EJB(mappedName = "ejb/SystemSettings", beanInterface = SystemSettings.class)
+    @EJB(mappedName = "ejb.SystemSettings", beanInterface = com.bssys.gisgmp.configuration.SystemSettings.class)
     private SystemSettings systemSettings;
     private String message;
 
@@ -32,7 +33,18 @@ public class EmailSenderBean implements EmailSenderInterface {
     public void getSender(String text) {
         log.info("actived getSender()");
 
-        setMessage(text);
+
+        log.info("getting text for send " + text);
+        log.info("systemSettings " + systemSettings);
+        try {
+            String txt = new String(text.getBytes("UTF-8"), "UTF-8");
+            log.info("getting text and encoding UTF-8 " + txt);
+            setMessage(txt);
+        } catch (UnsupportedEncodingException e) {
+            log.error(e.getMessage());
+        }
+
+        log.info("getMessage() " + getMessage());
         try {
             String emails = systemSettings.getProperty(USERS_EMAILS);
             log.info("systemSettings.getProperty(USERS_EMAILS) " + emails);
@@ -46,6 +58,9 @@ public class EmailSenderBean implements EmailSenderInterface {
                             try {
                                 log.info("send text on email" + email);
                                 mailUtility = new MailUtility();
+                                //String msg = new String(message.getBytes("UTF-8"),
+                                //        "UTF-8");
+                                log.info("getting text " + getMessage());
                                 mailUtility.setText(getMessage());
                                 mailUtility.setSubject(systemSettings.getProperty(SUBJECT_EMAILS));
 
@@ -67,58 +82,6 @@ public class EmailSenderBean implements EmailSenderInterface {
         }
     }
 }
-     /*try {
-            log.info("getSender() init");
-            Context ctx = new InitialContext();
-            AlertOfEvent alertOfEvent = (AlertOfEvent) ctx
-                    .lookup("AlertOfEventBean#ru.megar.dispatcher.AlertOfEvent");
-            alertOfEvent.setUrn("face");
-            Context ctx1 = new InitialContext();
-            EmailSenderInterface emailSenderInterface = (EmailSenderInterface) ctx1
-                    .lookup("AlertOfEventBean#ru.megar.dispatcher.AlertOfEvent");
-        } catch (NamingException e) {
-            log.error("NamingException getSender() " + e.getMessage());
-
-        } catch (RemoteException e){
-            log.error("RemoteException getSender() " + e.getMessage());
-        }
-        final String fromEmail = "alert@megar.ru"; //requires valid gmail id
-        final String password = "MegarNew#987"; // correct password for gmail id
-        //final String toEmail = "stcon@mail.ru"; // can be any email id
-
-        System.out.println("TLSEmail Start");
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "mail.megar.ru"); //SMTP Host
-        props.put("mail.smtp.port", "587"); //TLS Port
-        props.put("mail.smtp.auth", "true"); //enable authentication
-        props.put("mail.smtp.starttls.enable", "true"); //enable STARTTLS
-        props.put("mail.smtp.ssl.trust", "mail.megar.ru");
-        log.info("props " + props);
-
-        //create Authenticator object to pass in Session.getInstance argument
-        Authenticator auth = new Authenticator() {
-            //override the getPasswordAuthentication method
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(fromEmail, password);
-
-            }
-        };
-        log.info("fromEmail, password" + fromEmail + " " +  password + auth);
-        Session session = Session.getInstance(props, auth);
-        log.info(session);
-        try {
-            EmailSenderUtils.sendAlert(session,  alertOfEvent.getUrn()/*alertOfEvent.getUrn() /*+ " " + name + " " + competence + " "
-        + " " + date + " " + type + " " + rule + " " + thresh + " " + critical + " " + fact*///);
-       /* try {
-
-        }catch (RemoteException e) {
-
-        }*/
-        /*} catch (RemoteException e) {
-            log.error(e.getMessage());
-        }
-
-    }*/
 
 
 

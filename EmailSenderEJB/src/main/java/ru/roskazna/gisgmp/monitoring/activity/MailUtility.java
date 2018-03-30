@@ -12,14 +12,15 @@ import java.util.Properties;
 public class MailUtility {
 
 
-   private static final Logger log = LoggerFactory.getLogger(MailUtility.class);
+
+    private static final Logger log = LoggerFactory.getLogger(MailUtility.class);
     private String text;
     private String subject;
     private String email;
-    private static String smtpHost = "mail.megar.ru";
+    private static String smtpHost = "*********";
     private static int smtpPort = 587;
-    private static String defaultUser = "********";
-    private static String defaultPassword  = "******";
+    private static String defaultUser = "alert@megar.ru";
+    private static String defaultPassword  = "*******";
     static {
         if( System.getenv("SMTP_HOST") != null )
             smtpHost = System.getenv("SMTP_HOST");
@@ -95,7 +96,6 @@ public class MailUtility {
     }
 
 
-
     public  void sendMailWithEnvValues() throws Exception{
         log.info("push text for body and subject sendMailWithValues");
         Properties props = new Properties();
@@ -119,10 +119,15 @@ public class MailUtility {
         Transport transport = mailSession.getTransport();
 
         MimeMessage message = new MimeMessage(mailSession);
+        message.addHeader("Content-type", "text/HTML; charset=UTF-8");
+        message.addHeader("format", "flowed");
+        message.addHeader("Content-Transfer-Encoding", "8bit");
 
-        message.setText(getText());
-        message.setFrom(new InternetAddress("********"));
-        message.setSubject(getSubject());
+        //message.setHeader("Content-Type", "text/plain; charset=UTF-8");
+        message.setText(getText(), "UTF-8");
+        message.setFrom(new InternetAddress("**********", "NoReply-MEGAR"));
+        message.setReplyTo(InternetAddress.parse("no_reply@megar.com", false));
+        message.setSubject(getSubject(), "UTF-8");
         message.addRecipient(Message.RecipientType.TO,
                 new InternetAddress(getEmail()));
 
